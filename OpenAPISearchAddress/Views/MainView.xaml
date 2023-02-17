@@ -38,11 +38,17 @@
     </Grid>
 
     <!--검색 리스트(중단)-->
-    <ListView Grid.Row="1">
+    <ListView 
+      x:Name="lstView"
+      ItemsSource="{Binding AddressDetails}"
+      Grid.Row="1">
       <ListView.View>
         <GridView>
-          <GridViewColumn Header="우편번호" Width="100"/>
-          <GridViewColumn Header="주소"/>
+          <GridViewColumn Header="우편번호"
+                          Width="100"
+                          DisplayMemberBinding="{Binding 우편번호}"/>
+          <GridViewColumn Header="주소"
+                          DisplayMemberBinding="{Binding 도로명주소}"/>
         </GridView>
       </ListView.View>
     </ListView>
@@ -52,9 +58,21 @@
                 VerticalAlignment="Center"
                 Orientation="Horizontal">
       <TextBlock Text="Page : "/>
-      <TextBlock Text="1"/>
+      <TextBlock Text="{Binding Common.CurrentPage}"/>
       <TextBlock Text=" / "/>
-      <TextBlock Text="5"/>      
+      <TextBlock Text="{Binding Common.TotalPage}"/>      
     </StackPanel>
+
+    <Grid Grid.RowSpan="3"
+          Background="LightBlue"
+          Opacity=".5"
+          Visibility="{Binding SearchVisibility}"
+          >
+      <TextBlock Text="검색 중 입니다. ^^"
+                 FontSize="35"
+                 FontWeight="Bold"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center"/>
+    </Grid>
   </Grid>
 </Window>

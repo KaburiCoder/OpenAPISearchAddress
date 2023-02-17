@@ -1,4 +1,5 @@
-﻿using OpenAPISearchAddress.ViewModels;
+﻿using OpenAPISearchAddress.Extensions;
+using OpenAPISearchAddress.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,23 @@ namespace OpenAPISearchAddress.Views
   public partial class MainView : Window
   {
     private MainViewModel ViewModel => (MainViewModel)DataContext;
-    public MainView()
+
+    private void MainView_Loaded(object sender, RoutedEventArgs e)
     {
-      InitializeComponent();
+      var scrollViewer = lstView.FindVisualChild<ScrollViewer>();
+      if (scrollViewer != null)
+        scrollViewer.ScrollChanged += ScrollViewer_ScrollChanged; ;
+    }
+
+    private async void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    {
+      ScrollViewer scrollViewer = (ScrollViewer)sender;
+      if (scrollViewer.ScrollableHeight != 0 &&
+        scrollViewer.ScrollableHeight == scrollViewer.VerticalOffset)
+      {
+        // 스크롤이 최하단에 도착함
+        await ViewModel.OnScrollReachedBottom();
+      }
     }
 
     private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
@@ -39,5 +54,11 @@ namespace OpenAPISearchAddress.Views
         ViewModel.SearchAddress();
       }
     }
+
+    public MainView()
+    {
+      InitializeComponent();
+      this.Loaded += MainView_Loaded;
+    }   
   }
 }
